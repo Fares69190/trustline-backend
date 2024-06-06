@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import  LoginPersonne,MyTokenObtainPairView, MyTokenRefreshView,UtilisateurListCreate, UtilisateurDetail, EntrepriseListCreate, EntrepriseDetail, TravailleurListCreate, TravailleurDetail,ContenuListCreate, ContenuDetail,AnnonceListCreate, AnnonceDetail,OffreEmploiListCreate, OffreEmploiDetail, AnnuaireListCreate, AnnuaireDetail
+from .views import PersonnaliseCreationDeCompte, LoginPersonne,MyTokenObtainPairView, MyTokenRefreshView,UtilisateurListCreate, UtilisateurDetail, EntrepriseListCreate, EntrepriseDetail, TravailleurListCreate, TravailleurDetail,ContenuListCreate, ContenuDetail,AnnonceListCreate, AnnonceDetail,OffreEmploiListCreate, OffreEmploiDetail, AnnuaireListCreate, AnnuaireDetail
 
 urlpatterns = [
     path('utilisateurs/', UtilisateurListCreate.as_view(), name='utilisateur-list-create'),
@@ -16,6 +16,6 @@ urlpatterns = [
     path('offres-emploi/<int:pk>/', OffreEmploiDetail.as_view(), name='offre-emploi-detail'),
     path('annuaires/', AnnuaireListCreate.as_view(), name='annuaire-list-create'),
     path('annuaires/<int:pk>/', AnnuaireDetail.as_view(), name='annuaire-detail'),
-    path('login/', LoginPersonne.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', MyTokenRefreshView.as_view(), name='token_refresh'),
+    path('login/', LoginPersonne.as_view(), name='login'),
+    path('register/', PersonnaliseCreationDeCompte.as_view(), name='register'),
 ]

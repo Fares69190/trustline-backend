@@ -3,13 +3,15 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import BaseUserManager,PermissionsMixin,AbstractBaseUser
 
 
+
+# Ajoutez cette méthode dans votre CustomUserManager pour créer un utilisateur
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('L\'adresse e-mail doit être renseignée')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        user.set_password(password)  # Hachage du mot de passe
         user.save(using=self._db)
         return user
 
