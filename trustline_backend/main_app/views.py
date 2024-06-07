@@ -34,6 +34,16 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.db import transaction
 import json
 from django.contrib.auth.password_validation import validate_password
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.template.loader import render_to_string
+from django.conf import settings
+from rest_framework.generics import GenericAPIView
+from rest_framework import status
+from .serializers import PasswordResetRequestSerializer, SetNewPasswordSerializer
 
 
 # Vues pour le modèle Utilisateur
@@ -224,3 +234,62 @@ class PersonnaliseCreationDeCompte(View):
                 return JsonResponse({"error": "Données JSON mal formatées"}, status=400)
 
         return JsonResponse({"error": "Requête invalide"},status=400)
+    
+
+
+
+
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email']
+        user = Utilisateur.objects.filter(email=email).first()
+
+        if user is None:
+            return Response({"error": "Utilisateur non trouvé"}, status=404)
+
+        # Générer un token de réinitialisation de mot de passe
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        # Générer l'URL de réinitialisation du mot de passe
+        reset_url = f'http://localhost:8000/api/reset-password/{uid}/{token}'
+
+        # Rendre le template HTML pour l'e-mail
+        message = render_to_string('main_app/email_password_reset.html', {
+            'user': user,
+            'reset_url': reset_url,
+        })
+
+        # Envoyer l'e-mail
+        subject = 'Demande de réinitialisation de mot de passe'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+
+        email_message = EmailMultiAlternatives(subject, '', email_from, recipient_list)
+        email_message.attach_alternative(message, "text/html")
+        email_message.send()
+
+        return Response({"message": "E-mail de réinitialisation de mot de passe envoyé"}, status=200)
+
+# Vue pour réinitialiser le mot de passe
+class SetNewPasswordView(GenericAPIView):
+    serializer_class = SetNewPasswordSerializer
+
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = Utilisateur.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, Utilisateur.DoesNotExist):
+            user = None
+
+        if user and default_token_generator.check_token(user, token):
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user.set_password(serializer.validated_data['password'])
+            user.save()
+            return Response({"message": "Le mot de passe a été réinitialisé avec succès."}, status=status.HTTP_200_OK)
+        return Response({"error": "Lien invalide ou expiré."}, status=status.HTTP_400_BAD_REQUEST)  

@@ -71,6 +71,17 @@ SIMPLE_JWT = {
 
 #VERIFICATION_CODE_EXPIRATION_MINUTES = 10 # type: ignore
 
+# Configuration de l'email pour Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'test691901@gmail.com'
+EMAIL_HOST_PASSWORD = 'vbay dmgi pyui uhjw'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,7 +98,7 @@ ROOT_URLCONF = 'trustline_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'main_app/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

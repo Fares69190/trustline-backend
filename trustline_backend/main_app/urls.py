@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PersonnaliseCreationDeCompte, LoginPersonne,MyTokenObtainPairView, MyTokenRefreshView,UtilisateurListCreate, UtilisateurDetail, EntrepriseListCreate, EntrepriseDetail, TravailleurListCreate, TravailleurDetail,ContenuListCreate, ContenuDetail,AnnonceListCreate, AnnonceDetail,OffreEmploiListCreate, OffreEmploiDetail, AnnuaireListCreate, AnnuaireDetail
+from .views import PasswordResetRequestView, PersonnaliseCreationDeCompte, LoginPersonne,MyTokenObtainPairView, MyTokenRefreshView, SetNewPasswordView,UtilisateurListCreate, UtilisateurDetail, EntrepriseListCreate, EntrepriseDetail, TravailleurListCreate, TravailleurDetail,ContenuListCreate, ContenuDetail,AnnonceListCreate, AnnonceDetail,OffreEmploiListCreate, OffreEmploiDetail, AnnuaireListCreate, AnnuaireDetail
 
 urlpatterns = [
     path('utilisateurs/', UtilisateurListCreate.as_view(), name='utilisateur-list-create'),
@@ -18,4 +18,6 @@ urlpatterns = [
     path('annuaires/<int:pk>/', AnnuaireDetail.as_view(), name='annuaire-detail'),
     path('login/', LoginPersonne.as_view(), name='login'),
     path('register/', PersonnaliseCreationDeCompte.as_view(), name='register'),
+    path('password-reset-request/', PasswordResetRequestView.as_view(), name='password-reset-request'),
+    path('reset-password/<uidb64>/<token>/', SetNewPasswordView.as_view(), name='reset-password'),
 ]

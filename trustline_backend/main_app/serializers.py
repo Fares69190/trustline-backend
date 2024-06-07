@@ -40,3 +40,15 @@ class AnnuaireSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email_ou_telephone = serializers.CharField(required=True)
     passCode = serializers.CharField(required=True)
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True)
+    repassword = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data['password'] != data['repassword']:
+            raise serializers.ValidationError("Les mots de passe ne correspondent pas.")
+        return data
