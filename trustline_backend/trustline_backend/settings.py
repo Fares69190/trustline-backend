@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'main_app',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 
@@ -77,13 +78,14 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'test691901@gmail.com'
-EMAIL_HOST_PASSWORD = 'vbay dmgi pyui uhjw'
+EMAIL_HOST_PASSWORD = 'ulpu mbkb qlpb piau'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -91,7 +93,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+# Permettre les requêtes CORS depuis toutes les origines (à utiliser uniquement en développement)
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'trustline_backend.urls'
 

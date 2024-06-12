@@ -19,13 +19,13 @@ class CustomUserManager(BaseUserManager):
 class Utilisateur(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
-    prénom = models.CharField(max_length=255)
+    prenom = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
-    rôle = models.CharField(max_length=50)
+    role = models.CharField(max_length=50)
     date_inscription = models.DateTimeField(auto_now_add=True)
     adresse = models.CharField(max_length=255, null=True, blank=True)
-    téléphone = models.CharField(max_length=20, null=True, blank=True)
+    telephone = models.CharField(max_length=20, null=True, blank=True)
     last_login = models.DateTimeField(blank=True, null=True, verbose_name='last login')
 
     objects = CustomUserManager()
@@ -46,15 +46,15 @@ class Entreprise(Utilisateur):
     description = models.TextField(null=True, blank=True)
     logo = models.CharField(max_length=255, null=True, blank=True)
     WhatsApp = models.CharField(max_length=20, null=True, blank=True)
-    catégorie = models.CharField(max_length=255, null=True, blank=True)
+    categorie = models.CharField(max_length=255, null=True, blank=True)
     social_media = models.JSONField(null=True, blank=True)
     video_presentation = models.CharField(max_length=255, null=True, blank=True)
     images = models.JSONField(null=True, blank=True)
     meta_description = models.TextField(null=True, blank=True)
 
 class Travailleur(Utilisateur):
-    compétences = models.JSONField(null=True, blank=True)
-    expériences = models.JSONField(null=True, blank=True)
+    competences = models.JSONField(null=True, blank=True)
+    experiences = models.JSONField(null=True, blank=True)
     cv = models.FileField(upload_to='cvs/', null=True, blank=True)
     abonnement = models.JSONField(null=True, blank=True)
 

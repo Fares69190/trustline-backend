@@ -147,7 +147,7 @@ class LoginPersonne(APIView):
         email_ou_telephone = serializer.validated_data["email_ou_telephone"]
         passCode = serializer.validated_data["passCode"]
 
-        print(f"Email ou Téléphone: {email_ou_telephone}")
+        print(f"Email ou Telephone: {email_ou_telephone}")
         print(f"PassCode: {passCode}")
 
         is_email = re.match(r"[^@]+@[^@]+\.[^@]+", email_ou_telephone) is not None
@@ -155,18 +155,18 @@ class LoginPersonne(APIView):
         if is_email:
             personne = Utilisateur.objects.filter(email=email_ou_telephone).first()
         else:
-            personne = Utilisateur.objects.filter(téléphone=email_ou_telephone).first()
+            personne = Utilisateur.objects.filter(telephone=email_ou_telephone).first()
 
         if personne is None:
-            print("Utilisateur non trouvé")
-            raise AuthenticationFailed("E-mail, téléphone ou mot de passe incorrect")
+            print("Utilisateur non trouve")
+            raise AuthenticationFailed("E-mail, telephone ou mot de passe incorrect")
 
         if not personne.check_password(passCode):
             print("Mot de passe incorrect")
-            raise AuthenticationFailed("E-mail, téléphone ou mot de passe incorrect")
+            raise AuthenticationFailed("E-mail, telephone ou mot de passe incorrect")
 
         if not personne.is_active:
-            raise AuthenticationFailed("Le compte est désactivé")
+            raise AuthenticationFailed("Le compte est desactive")
 
         # Création du token
         refresh = RefreshToken.for_user(personne)
@@ -175,7 +175,7 @@ class LoginPersonne(APIView):
             {
                 "jwt": str(refresh.access_token),
                 "refresh": str(refresh),
-                "user_type": personne.rôle,
+                "user_type": personne.role,
             }
         )
 
@@ -194,16 +194,16 @@ class PersonnaliseCreationDeCompte(View):
                     data = request.POST
 
                 nom = data.get('nom')
-                prénom = data.get('prénom')
+                prenom = data.get('prenom')
                 email = data.get('email')
-                téléphone = data.get('téléphone')
+                telephone = data.get('telephone')
                 adresse = data.get('adresse')
                 password = data.get('password')
                 repassword = data.get('repassword')
-                rôle = data.get('rôle')
+                role = data.get('role')
                 date_inscription = data.get('date_inscription')
 
-                if not nom or not email or not téléphone or not password:
+                if not nom or not email or not telephone or not password:
                     return HttpResponseBadRequest("Les champs requis doivent être renseignés")
 
                 if password != repassword:
@@ -218,11 +218,11 @@ class PersonnaliseCreationDeCompte(View):
                     # Créer un utilisateur générique
                     user = Utilisateur(
                         nom=nom,
-                        prénom=prénom,
+                        prenom=prenom,
                         email=email,
-                        téléphone=téléphone,
+                        telephone=telephone,
                         adresse=adresse,
-                        rôle=rôle,
+                        role=role,
                         date_inscription=date_inscription,
                     )
                     user.set_password(password)
