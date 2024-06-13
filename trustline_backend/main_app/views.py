@@ -256,7 +256,7 @@ class PasswordResetRequestView(APIView):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
         # Générer l'URL de réinitialisation du mot de passe
-        reset_url = f'http://localhost:8000/api/reset-password/{uid}/{token}'
+        reset_url = f'http://localhost:4200/reset-password/{uid}/{token}'
 
         # Rendre le template HTML pour l'e-mail
         message = render_to_string('main_app/email_password_reset.html', {
